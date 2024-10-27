@@ -72,9 +72,9 @@ async def slash_addping(interaction: discord.Interaction, role: discord.Role, me
 
 # Help Command
 @bot.command()
-async def bot_help(ctx):
+async def commands(ctx):
     help_text = (
-        "Here are the commands you can use:\n"
+        "**Here are the commands you can use:**\n"
         "`!link` - Get the link to install the Tidy Tab Groups extension.\n"
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
         "`!ping` - Check the bot's latency.\n"
@@ -83,10 +83,10 @@ async def bot_help(ctx):
     )
     await ctx.send(help_text)
 
-@bot.tree.command(name="bot-help", description="Show available commands")
-async def slash_bot_help(interaction: discord.Interaction):
+@bot.tree.command(name="commands", description="Show available commands")
+async def slash_commands(interaction: discord.Interaction):
     help_text = (
-        "Here are the commands you can use:\n"
+        "**Here are the commands you can use:**\n"
         "`!link` - Get the link to install the Tidy Tab Groups extension.\n"
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
         "`!ping` - Check the bot's latency.\n"
