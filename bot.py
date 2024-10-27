@@ -5,11 +5,13 @@ import os
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
+intents.messages = True  # Ensure the bot can read messages
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # BOT VARIABLES:
 rich_presence = "Tab Organization"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
+user_message_counts = {}  # Dictionary to keep track of user message counts
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 
@@ -19,10 +21,19 @@ async def on_ready():
     await bot.tree.sync()
     print(f"We have logged in as {bot.user}")
 
+# Count messages sent by users
+@bot.event
+async def on_message(message):
+    if message.author.bot:
+        return
+    if message.author.id not in user_message_counts:
+        user_message_counts[message.author.id] = 0
+    user_message_counts[message.author.id] += 1
+    await bot.process_commands(message)
+
 # ☲☲☲☲ COMMANDS ☲☲☲☲
 
 # Add Ping Command
-
 @bot.command()
 async def addping(ctx, role: discord.Role, member: discord.Member = None):
     if member is None:
@@ -59,8 +70,43 @@ async def slash_addping(interaction: discord.Interaction, role: discord.Role, me
     else:
         await interaction.response.send_message("ERROR: I-CAN'T-ASSIGN-ROLES-BEEPBOOP 🕹️🛠️🦾🤖")
 
-# Link Command
+# Help Command
+@bot.command()
+async def help(ctx):
+    help_text = (
+        "Here are the commands you can use:\n"
+        "`!link` - Get the link to install the Tidy Tab Groups extension.\n"
+        "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
+        "`!ping` - Check the bot's latency.\n"
+        "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
+        "`!stats` - Show the number of messages you've sent."
+    )
+    await ctx.send(help_text)
 
+@bot.tree.command(name="help", description="Show available commands")
+async def slash_help(interaction: discord.Interaction):
+    help_text = (
+        "Here are the commands you can use:\n"
+        "`!link` - Get the link to install the Tidy Tab Groups extension.\n"
+        "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
+        "`!ping` - Check the bot's latency.\n"
+        "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
+        "`!stats` - Show the number of messages you've sent."
+    )
+    await interaction.response.send_message(help_text)
+
+# User Stats Command
+@bot.command()
+async def stats(ctx):
+    count = user_message_counts.get(ctx.author.id, 0)
+    await ctx.send(f"{ctx.author.mention}, you have sent **{count}** messages in this server! Great Job!📊")
+
+@bot.tree.command(name="stats", description="Show your message count")
+async def slash_stats(interaction: discord.Interaction):
+    count = user_message_counts.get(interaction.user.id, 0)
+    await interaction.response.send_message(f"{interaction.user.mention}, you have sent **{count}** messages in this server! Great Job!📊")
+
+# Link Command
 @bot.command()
 async def link(ctx):
     user = ctx.author
@@ -72,7 +118,6 @@ async def slash_link(interaction: discord.Interaction):
     await interaction.response.send_message(f"{user.mention} Here's the link to install the Tidy Tab Groups extension: https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf")
 
 # Install Command
-
 @bot.command()
 async def install(ctx):
     user = ctx.author
@@ -84,7 +129,6 @@ async def slash_install(interaction: discord.Interaction):
     await interaction.response.send_message(f"{user.mention} Here’s where you can install the Tidy Tab Groups extension: [hey! click me! :P](<https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf>) \n Then, you can click `Install` to get it and click accept. Enjoy organization! 😎😄😁")
 
 # Ping Command
-
 @bot.command()
 async def ping(ctx):
     latency = round(bot.latency * 1000)
