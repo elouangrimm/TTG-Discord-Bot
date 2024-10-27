@@ -4,6 +4,8 @@ import os
 import random
 import datetime
 
+# Made By Elouan Grimm
+
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
