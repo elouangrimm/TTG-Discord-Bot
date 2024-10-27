@@ -14,6 +14,7 @@ rich_presence = "Tab Organization"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
 tips_file = "tips.txt"
 tip_time = 9
+user_points = {}
 
 # DAILY TIPS:
 
@@ -132,6 +133,27 @@ async def slash_link(interaction: discord.Interaction):
     user = interaction.user
     await interaction.response.send_message(f"{user.mention} Here's the link to install the Tidy Tab Groups extension: https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf")
 
+# Online & Offline commands
+@bot.command()
+async def online(ctx):
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name=rich_presence))
+    await ctx.send("*yawn strech* Good Morning ! 🌅👋")
+
+@bot.tree.command(name="online", description="Set the bot status to online.")
+async def slash_online(interaction: discord.Interaction):
+    await bot.change_presence(status=discord.Status.online, activity=discord.Game(name=rich_presence))
+    await interaction.response.send_message("*Yawn* Good Morning ! 🌅👋")
+
+@bot.command()
+async def offline(ctx):
+    await bot.change_presence(status=discord.Status.invisible)
+    await ctx.send("Good night! *yawn* 💤")
+
+@bot.tree.command(name="offline", description="Set the bot status to offline.")
+async def slash_offline(interaction: discord.Interaction):
+    await bot.change_presence(status=discord.Status.invisible)
+    await interaction.response.send_message("Good night! *yawn* 💤")
+
 # Install Command
 @bot.command()
 async def install(ctx):
@@ -147,12 +169,18 @@ async def slash_install(interaction: discord.Interaction):
 @bot.command()
 async def ping(ctx):
     latency = round(bot.latency * 1000)
-    await ctx.send(f"Pong! 🏓 *(Latency: {latency} ms)*")
+    user_id = ctx.author.id
+    user_points[user_id] = user_points.get(user_id, 0) + 1
+    points = user_points[user_id]
+    await ctx.send(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{ctx.author.mention} you have {points} points!)")
 
 @bot.tree.command(name="ping", description="Check the bot's latency and play a little game!")
 async def slash_ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
-    await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*")
+    user_id = interaction.user.id
+    user_points[user_id] = user_points.get(user_id, 0) + 1
+    points = user_points[user_id]
+    await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{interaction.user.mention} you have {points} points!")
 
 # ☲☲☲☲ BOT SETUP & SYNC ☲☲☲☲
 
