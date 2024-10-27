@@ -110,6 +110,8 @@ async def commands(ctx):
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
         "`!ping` - Check the bot's latency.\n"
         "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
+        "`!commands` - Get this list! In the chat! It's Magical!\n"
+        "`!offline` and `online` - Make the bot appear Online or Offline\n"
     )
     await ctx.send(help_text)
 
@@ -121,6 +123,8 @@ async def slash_commands(interaction: discord.Interaction):
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
         "`!ping` - Check the bot's latency.\n"
         "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
+        "`!commands` - Get this list! In the chat! It's Magical!\n"
+        "`!offline` and `online` - Make the bot appear Online or Offline\n"
     )
     await interaction.response.send_message(help_text)
 
