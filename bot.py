@@ -1,6 +1,7 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 import os
+import random
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -10,6 +11,20 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # BOT VARIABLES:
 rich_presence = "Tab Organization"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
+tips_file = "tips.txt"
+
+# DAILY TIPS:
+
+def load_tips():
+    with open(tips_file, "r") as file:
+        return file.read().splitlines()
+
+@tasks.loop(hours=24)
+async def send_daily_tip():
+    channel = bot.get_channel(1284250087995871367) 
+    tips = load_tips()
+    tip = random.choice(tips)
+    await channel.send(f"**Daily Tip:** {tip}")
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 
@@ -17,6 +32,7 @@ ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name=rich_presence))
     await bot.tree.sync()
+    send_daily_tip.start()  # Start the daily tip task
     print(f"We have logged in as {bot.user}")
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
@@ -57,6 +73,18 @@ async def slash_addping(interaction: discord.Interaction, role: discord.Role, me
             await interaction.response.send_message("ERROR: CANNOT-ASSIGN-ROLE-BEEPBOOP 🤖🦾🛠️🕹️")
     else:
         await interaction.response.send_message("ERROR: I-CAN'T-ASSIGN-ROLES-BEEPBOOP 🕹️🛠️🦾🤖")
+
+@bot.command()
+async def tip(ctx):
+    tips = load_tips()
+    tip = random.choice(tips)
+    await ctx.send(f"**Tip of the Day:** {tip}")
+    
+@bot.tree.command(name="tip", description="Get a random tip") 
+async def slash_tip(interaction: discord.Interaction):
+    tips = load_tips()
+    tip = random.choice(tips)
+    await interaction.response.send_message(f"**Tip of the Day:** {tip}")
 
 # Help Command
 @bot.command()
