@@ -148,12 +148,12 @@ async def slash_online(interaction: discord.Interaction):
 
 @bot.command()
 async def offline(ctx):
-    await bot.change_presence(status=discord.Status.invisible)
+    await bot.change_presence(status=discord.Status.offline)
     await ctx.send("Good night! *yawn* 💤")
 
 @bot.tree.command(name="offline", description="Set the bot status to offline.")
 async def slash_offline(interaction: discord.Interaction):
-    await bot.change_presence(status=discord.Status.invisible)
+    await bot.change_presence(status=discord.Status.offline)
     await interaction.response.send_message("Good night! *yawn* 💤")
 
 # Install Command
