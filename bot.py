@@ -5,13 +5,11 @@ import os
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
-intents.messages = True  # Ensure the bot can read messages
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # BOT VARIABLES:
 rich_presence = "Tab Organization"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
-user_message_counts = {}  # Dictionary to keep track of user message counts
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 
@@ -20,16 +18,6 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name=rich_presence))
     await bot.tree.sync()
     print(f"We have logged in as {bot.user}")
-
-# Count messages sent by users
-@bot.event
-async def on_message(message):
-    if message.author.bot:
-        return
-    if message.author.id not in user_message_counts:
-        user_message_counts[message.author.id] = 0
-    user_message_counts[message.author.id] += 1
-    await bot.process_commands(message)
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
 
@@ -79,7 +67,6 @@ async def commands(ctx):
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
         "`!ping` - Check the bot's latency.\n"
         "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
-        "`!stats` - Show the number of messages you've sent."
     )
     await ctx.send(help_text)
 
@@ -91,20 +78,8 @@ async def slash_commands(interaction: discord.Interaction):
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
         "`!ping` - Check the bot's latency.\n"
         "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
-        "`!stats` - Show the number of messages you've sent."
     )
     await interaction.response.send_message(help_text)
-
-# User Stats Command
-@bot.command()
-async def stats(ctx):
-    count = user_message_counts.get(ctx.author.id, 0)
-    await ctx.send(f"{ctx.author.mention}, you have sent **{count}** messages in this server! Great Job!📊")
-
-@bot.tree.command(name="stats", description="Show your message count")
-async def slash_stats(interaction: discord.Interaction):
-    count = user_message_counts.get(interaction.user.id, 0)
-    await interaction.response.send_message(f"{interaction.user.mention}, you have sent **{count}** messages in this server! Great Job!📊")
 
 # Link Command
 @bot.command()
