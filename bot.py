@@ -52,6 +52,8 @@ async def slash_ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
     await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*")
 
+# Setup & Sync
+
 @bot.event
 async def on_ready():
     await bot.tree.sync()
