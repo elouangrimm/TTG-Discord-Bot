@@ -21,10 +21,10 @@ def load_tips():
 
 @tasks.loop(hours=24)
 async def send_daily_tip():
-    channel = bot.get_channel(1284250087995871367) 
+    channel = bot.get_channel(1284250087995871367) # This is in #general
     tips = load_tips()
     tip = random.choice(tips)
-    await channel.send(f"**Daily Tip:** {tip}")
+    await channel.send(f"**Daily Browser Tip:** \n {tip} ||\n *hey! dm @elouangrimm if you have any ideas for tips to add or go to the [GitHub](<https://github.com/elouangrimm/TTG-Discord-Bot/blob/main/tips.txt>) to add some yourself! Thanks!*||")
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 

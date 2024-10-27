@@ -1,0 +1,8 @@
+Organize Your Tabs: Keep your browser clutter-free by grouping similar tabs together. But, if you dont want to do it manually, then install Tidy Tab Groups! It’ll make finding what you need much faster! 🗂️
+Use Keyboard Shortcuts: Familiarize yourself with keyboard shortcuts for quick navigation between your tab groups. It saves time! ⌨️
+Close Unused Tabs: Regularly review and close tabs you no longer need. This improves browser performance and reduces distractions. ❌
+Rename Tab Groups: Give meaningful names to your tab groups. This makes it easier to identify what’s inside each group at a glance! 🏷️
+Use Color-Coding: Color-code your tab groups based on categories. Tidy Tab Groups does this automattically, but it might be useful to change those colors yourself. Visual organization helps you locate tabs quickly! 🌈
+Bookmark Important Tabs: For frequently accessed websites, create bookmarks to access them easily instead of keeping them open all the time. 📚
+Schedule a Clean-Up: Set a regular reminder to clean up your tabs and groups. A tidy browser leads to a more productive workflow! ⏰
+Explore Extensions: Look for other browser extensions that complement Tidy Tab Groups for enhanced productivity. Remember to keep ol' TTG! 🌐
