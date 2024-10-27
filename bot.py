@@ -35,7 +35,7 @@ async def addping(ctx, role: discord.Role, member: discord.Member = None):
     if ctx.guild.me.guild_permissions.manage_roles:
         if role.position < ctx.guild.me.top_role.position:
             await member.add_roles(role)
-            await ctx.send(f"{member.mention}! You now have the {role.name} ping! 🎉")
+            await ctx.send(f"{member.mention}! You now have the "{role.name}"" ping! 🎉")
         else:
             await ctx.send("ERROR: CANNOT-ASSIGN-ROLE-BEEPBOOP 🤖🦾🛠️🕹️")
     else:
@@ -53,7 +53,7 @@ async def slash_addping(interaction: discord.Interaction, role: discord.Role, me
     if interaction.guild.me.guild_permissions.manage_roles:
         if role.position < interaction.guild.me.top_role.position:
             await member.add_roles(role)
-            await interaction.response.send_message(f"{member.mention}! You now have the {role.name} ping! 🎉")
+            await interaction.response.send_message(f"{member.mention}! You now have the "{role.name}" ping! 🎉")
         else:
             await interaction.response.send_message("ERROR: CANNOT-ASSIGN-ROLE-BEEPBOOP 🤖🦾🛠️🕹️")
     else:
