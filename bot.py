@@ -182,13 +182,6 @@ async def slash_ping(interaction: discord.Interaction):
     user_id = interaction.user.id
     user_points[user_id] = user_points.get(user_id, 0) + 1
     points = user_points[user_id]
-    await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{interaction.user.mention} you have {points} points!")
-
-# ☲☲☲☲ BOT SETUP & SYNC ☲☲☲☲
-
-@bot.event
-async def on_ready():
-    await bot.tree.sync()
-    print(f"We have logged in as {bot.user}")
+    await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{interaction.user.mention} you have {points} points!)")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
