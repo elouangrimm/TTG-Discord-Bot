@@ -1,3 +1,4 @@
+# Format the tips like this, with an emoji at the end and a short title in bold (btw u can use comments with #s):
 *Organize Your Tabs*: Keep your browser clutter-free by grouping similar tabs together. But, if you dont want to do it manually, then install Tidy Tab Groups! It’ll make finding what you need much faster! 🗂️
 *Use Keyboard Shortcuts*: Familiarize yourself with keyboard shortcuts for quick navigation between your tab groups. It saves time! ⌨️
 *Close Unused Tabs*: Regularly review and close tabs you no longer need. This improves browser performance and reduces distractions. ❌

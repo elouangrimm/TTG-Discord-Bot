@@ -37,8 +37,9 @@ async def on_ready():
 
 def load_tips():
     with open(tips_file, "r") as file:
-        return file.read().splitlines()
-        print("Tip File Loaded")
+        tips = [line for line in file.read().splitlines() if not line.startswith("#")]
+    print("Tip File Loaded")
+    return tips
 
 
 @tasks.loop(minutes=1)
