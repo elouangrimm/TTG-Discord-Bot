@@ -242,36 +242,36 @@ async def slash_ping_points(interaction: discord.Interaction, member: discord.Me
 
 # Edit Command - Only through "!", not a slash command...
 @bot.command()
-async def edit(ctx, new_name: str = None):
+async def edit(ctx, *, new_name: str = None):
     admin_role = discord.utils.get(ctx.guild.roles, name="admin")
     if admin_role in ctx.author.roles:
         if new_name == "reset":
             try:
                 await ctx.guild.me.edit(nick=username)
-                await bot.user.edit(avatar=pfp)
+                await bot.user.edit(avatar=pfp)  # Reset profile picture
                 await ctx.send(f"BEEPBOOP-RESETTING-TO-ORIGINAL-SETTINGS! MY-NAME-IS-NOW **{username}**! 📸🤖")
-                print(f"Bot reset to original name and PFP: {username}")
+                print(f"Bot reset to original name: {username}")
             except discord.Forbidden:
                 await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-RESET-MY-NAME-AND-PICTURE 🔧")
         else:
+            new_pfp = None
             if ctx.message.attachments:
                 new_pfp = await ctx.message.attachments[0].read()
-                try:
+            
+            try:
+                if new_pfp:
                     await bot.user.edit(avatar=new_pfp)
                     await ctx.send("SUCCESS: PROFILE-PICTURE-UPDATED-BEEPBOOP 📸🤖")
                     print("Bot profile picture updated")
-                except discord.Forbidden:
-                    await ctx.send("ERROR: I-CANNOT-CHANGE-MY-PICTURE-NEED-MORE-PERMISSIONS-BEEPBOOP 🔧🕹️🤖")
 
-            if new_name:
-                try:
+                if new_name:
                     await ctx.guild.me.edit(nick=new_name)
                     await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
                     print(f"Bot renamed to {new_name}")
-                except discord.Forbidden:
-                    await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
-            else:
-                await ctx.send("ERROR: NO-NEW-NAME-PROVIDED-BEEPBOOP 📎🛠️🤖")
+                else:
+                    await ctx.send("ERROR: NO-NEW-NAME-PROVIDED-BEEPBOOP 📎🛠️🤖")
+            except discord.Forbidden:
+                await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME-AND-PICTURE 🔧")
     else:
         await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-EDIT-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
 
