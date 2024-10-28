@@ -15,6 +15,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 username = "Tidy Tab Groups"
 pfp_path = "pfp.png"
 rich_presence = "Tab Organization"
+extension_url = "https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
 tips_file = "tips.txt"
 tip_time = 9
@@ -30,7 +31,11 @@ pfp = load_pfp()
 
 @bot.event
 async def on_ready():
-    await bot.change_presence(activity=discord.Game(name=rich_presence))
+    activity = discord.Streaming(
+        name=rich_presence,
+        url=extension_url
+    )
+    await bot.change_presence(activity=activity)
     await bot.tree.sync()
     send_daily_tip.start()
     print(f"☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲ Bot logged in as {bot.user}! Success! ☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲")
