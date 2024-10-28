@@ -171,7 +171,7 @@ async def slash_install(interaction: discord.Interaction):
     user = interaction.user
     await interaction.response.send_message(f"{user.mention} Here’s where you can install the Tidy Tab Groups extension: [hey! click me! :P](<https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf>) \n Then, you can click `Install` to get it and click accept. Enjoy organization! 😎😄😁")
 
-# Ping Command
+# Ping Command and Points Command
 @bot.command()
 async def ping(ctx):
     latency = round(bot.latency * 1000)
@@ -187,5 +187,19 @@ async def slash_ping(interaction: discord.Interaction):
     user_points[user_id] = user_points.get(user_id, 0) + 1
     points = user_points[user_id]
     await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{interaction.user.mention} you have {points} points!)")
+
+@bot.command()
+async def ping_points(ctx):
+    user_id = ctx.author.id
+    user_points[user_id] = user_points.get(user_id, 0)
+    points = user_points[user_id]
+    await ctx.send(f"Great Job {ctx.author.mention}! You have {points} points!")
+
+@bot.tree.command(name="ping_points", description="Check how many points ya got!")
+async def slash_ping_points(interaction: discord.Interaction):
+    user_id = interaction.user.id
+    user_points[user_id] = user_points.get(user_id, 0)
+    points = user_points[user_id]
+    await interaction.response.send_message(f"Great Job {ctx.author.mention}! You have {points} points!")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
