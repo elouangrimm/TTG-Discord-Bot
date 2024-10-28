@@ -23,6 +23,8 @@ user_points = {}
 def load_tips():
     with open(tips_file, "r") as file:
         return file.read().splitlines()
+        print("Tip File Loaded")
+
 
 @tasks.loop(minutes=1)
 async def send_daily_tip():
@@ -32,6 +34,7 @@ async def send_daily_tip():
         tips = load_tips()
         tip = random.choice(tips)
         await channel.send(f"**Daily Browser Tip:** \n {tip}")
+        print("Daily Tip Sent")
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 
@@ -40,7 +43,7 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name=rich_presence))
     await bot.tree.sync()
     send_daily_tip.start()
-    print(f"We have logged in as {bot.user}")
+    print(f"☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲ Bot logged in as {bot.user}! Success! ☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲")
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
 
@@ -52,16 +55,20 @@ async def addping(ctx, role: discord.Role, member: discord.Member = None):
 
     if role.name not in ALLOWED_ROLES:
         await ctx.send(f"ERROR: {role.name} IS-NOT-ALLOWED-BEEPBOOP. CHOOSE-FROM: {', '.join(ALLOWED_ROLES)}. THANK YOU FOR YOUR PATIENCE. 🦾🕹️🤖🛠️")
+        print("Error: Role Not Allowed")
         return
 
     if ctx.guild.me.guild_permissions.manage_roles:
         if role.position < ctx.guild.me.top_role.position:
             await member.add_roles(role)
             await ctx.send(f"{member.mention}! You now have the @{role.name} ping! 🎉")
+            print(f"{role.name} role added!")
         else:
             await ctx.send("ERROR: CANNOT-ASSIGN-ROLE-BEEPBOOP 🤖🦾🛠️🕹️")
+        print("Error: Cannot Asssign Role")
     else:
         await ctx.send("ERROR: I-CAN'T-ASSIGN-ROLES-BEEPBOOP 🕹️🛠️🦾🤖")
+        print("Error: No Assigning Role Permission, add 'Manage Roles' in Discord Developer console.")
 
 @bot.tree.command(name="addping", description="Assign a certain ping role to YOU!")
 async def slash_addping(interaction: discord.Interaction, role: discord.Role, member: discord.Member = None):
@@ -70,16 +77,20 @@ async def slash_addping(interaction: discord.Interaction, role: discord.Role, me
 
     if role.name not in ALLOWED_ROLES:
         await interaction.response.send_message(f"ERROR: {role.name} IS-NOT-ALLOWED-BEEPBOOP. CHOOSE-FROM: {', '.join(ALLOWED_ROLES)}. THANK YOU FOR YOUR PATIENCE. 🦾🕹️🤖🛠️")
+        print("Error: Role Not Allowed")
         return
 
     if interaction.guild.me.guild_permissions.manage_roles:
         if role.position < interaction.guild.me.top_role.position:
             await member.add_roles(role)
             await interaction.response.send_message(f"{member.mention}! You now have the @{role.name} ping! 🎉")
+            print(f"{role.name} role added!")
         else:
             await interaction.response.send_message("ERROR: CANNOT-ASSIGN-ROLE-BEEPBOOP 🤖🦾🛠️🕹️")
+            print("Error: Cannot Asssign Role")
     else:
         await interaction.response.send_message("ERROR: I-CAN'T-ASSIGN-ROLES-BEEPBOOP 🕹️🛠️🦾🤖")
+        print("Error: No Assigning Role Permission, add 'Manage Roles' in Discord Developer console.")
 
 # Tip Command
 
@@ -88,18 +99,21 @@ async def tip(ctx):
     tips = load_tips()
     tip = random.choice(tips)
     await ctx.send(f"**Browser Tip:** {tip}")
+    print("Tip Sent")
 
 @bot.tree.command(name="tip", description="Get a random browser tip!") 
 async def slash_tip(interaction: discord.Interaction):
     tips = load_tips()
     tip = random.choice(tips)
     await interaction.response.send_message(f"**Browser Tip:** {tip}")
+    print("Tip Sent")
 
 @bot.command()
 async def tip_help(ctx):
     tips = load_tips()
     tip = random.choice(tips)
     await ctx.send(f"*hey! dm @elouangrimm if you have any ideas for tips to add or go to the [GitHub](<https://github.com/elouangrimm/TTG-Discord-Bot/blob/main/tips.txt>) to add some yourself! thanks!*")
+    print("Tip Advert Sent")
 
 # Help Command
 @bot.command()
@@ -108,12 +122,14 @@ async def commands(ctx):
         "**Here are the commands you can use:**\n"
         "`!link` - Get the link to install the Tidy Tab Groups extension.\n"
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
-        "`!ping` - Check the bot's latency.\n"
+        "`!ping` - Check the bot's latency... and play a little game.\n"
         "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
         "`!commands` - Get this list! In the chat! It's Magical!\n"
-        "`!offline` and `online` - Make the bot appear Online or Offline\n"
+        "`!offline` and `!online` - Make the bot appear Online or Offline\n"
+        "`!tip` and `!tip_help` - Get a tip about your browser BEFORE THE DAILY ONE! AMAZING!\n"
     )
     await ctx.send(help_text)
+    print("Help Sent")
 
 @bot.tree.command(name="commands", description="Show available commands from this beautiful bot!")
 async def slash_commands(interaction: discord.Interaction):
@@ -121,55 +137,65 @@ async def slash_commands(interaction: discord.Interaction):
         "**Here are the commands you can use:**\n"
         "`!link` - Get the link to install the Tidy Tab Groups extension.\n"
         "`!install` - Get instructions for how to install the Tidy Tab Groups extension.\n"
-        "`!ping` - Check the bot's latency.\n"
+        "`!ping` - Check the bot's latency... and play a little game.\n"
         "`!addping <role> [member]` - Give yourself specific pings (Options: updates, socials, stuff, support, ping, yapper).\n"
         "`!commands` - Get this list! In the chat! It's Magical!\n"
-        "`!offline` and `online` - Make the bot appear Online or Offline\n"
+        "`!offline` and `!online` - Make the bot appear Online or Offline\n"
+        "`!tip` and `!tip_help` - Get a tip about your browser BEFORE THE DAILY ONE! AMAZING!\n"
     )
     await interaction.response.send_message(help_text)
+    print("Help Sent")
 
 # Link Command
 @bot.command()
 async def link(ctx):
     user = ctx.author
     await ctx.send(f"{user.mention} Here's the link to install the Tidy Tab Groups extension: https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf")
+    print("Link Sent")
 
 @bot.tree.command(name="link", description="Get the link to install Tidy Tab Groups!")
 async def slash_link(interaction: discord.Interaction):
     user = interaction.user
     await interaction.response.send_message(f"{user.mention} Here's the link to install the Tidy Tab Groups extension: https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf")
+    print("Link Sent")
 
 # Online & Offline commands
 @bot.command()
 async def online(ctx):
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name=rich_presence))
     await ctx.send("*yawn strech* Good Morning ! 🌅👋")
+    print("BOT IS ONLINE")
 
 @bot.tree.command(name="online", description="Set the bot status to online.")
 async def slash_online(interaction: discord.Interaction):
     await bot.change_presence(status=discord.Status.online, activity=discord.Game(name=rich_presence))
     await interaction.response.send_message("*Yawn* Good Morning ! 🌅👋")
+    print("BOT IS ONLINE")
 
 @bot.command()
 async def offline(ctx):
     await bot.change_presence(status=discord.Status.offline)
     await ctx.send("Good night! *yawn* 💤")
+    print("BOT IS OFFLINE")
 
 @bot.tree.command(name="offline", description="Set the bot status to offline.")
 async def slash_offline(interaction: discord.Interaction):
     await bot.change_presence(status=discord.Status.offline)
     await interaction.response.send_message("Good night! *yawn* 💤")
+    print("BOT IS OFFLINE")
 
 # Install Command
 @bot.command()
 async def install(ctx):
     user = ctx.author
     await ctx.send(f"{user.mention} Here’s where you can install the Tidy Tab Groups extension: [hey! click me! :P](<https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf>) \n Then, you can click `Install` to get it and click accept. Enjoy organization! 😎😄😁")
+    print("Install Instructions Sent")
 
 @bot.tree.command(name="install", description="Get instructions for how to install the Tidy Tab Groups extension!")
 async def slash_install(interaction: discord.Interaction):
     user = interaction.user
     await interaction.response.send_message(f"{user.mention} Here’s where you can install the Tidy Tab Groups extension: [hey! click me! :P](<https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf>) \n Then, you can click `Install` to get it and click accept. Enjoy organization! 😎😄😁")
+    print("Install Instructions Sent")
 
 # Ping Command and Points Command
 @bot.command()
@@ -178,7 +204,8 @@ async def ping(ctx):
     user_id = ctx.author.id
     user_points[user_id] = user_points.get(user_id, 0) + 1
     points = user_points[user_id]
-    await ctx.send(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{ctx.author.mention} you have {points} points!)")
+    await ctx.send(f"Pong! 🏓 *(Latency: {latency} ms)*")
+    print("Ping Received, LATENCY: {latency} ms")
 
 @bot.tree.command(name="ping", description="Check the bot's latency and play a little game!")
 async def slash_ping(interaction: discord.Interaction):
@@ -186,7 +213,8 @@ async def slash_ping(interaction: discord.Interaction):
     user_id = interaction.user.id
     user_points[user_id] = user_points.get(user_id, 0) + 1
     points = user_points[user_id]
-    await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*\n (pssst:{interaction.user.mention} you have {points} points!)")
+    await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*")
+    print("Ping Received, LATENCY: {latency} ms")
 
 @bot.command()
 async def ping_points(ctx):
@@ -194,6 +222,7 @@ async def ping_points(ctx):
     user_points[user_id] = user_points.get(user_id, 0)
     points = user_points[user_id]
     await ctx.send(f"Great Job {ctx.author.mention}! You have {points} points!")
+    print(f"{ctx.author.mention} has {points} points.")
 
 @bot.tree.command(name="ping_points", description="Check how many points ya got!")
 async def slash_ping_points(interaction: discord.Interaction):
@@ -201,5 +230,6 @@ async def slash_ping_points(interaction: discord.Interaction):
     user_points[user_id] = user_points.get(user_id, 0)
     points = user_points[user_id]
     await interaction.response.send_message(f"Great Job {ctx.author.mention}! You have {points} points!")
+    print(f"{ctx.author.mention} has {points} points.")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
