@@ -229,7 +229,7 @@ async def slash_ping_points(interaction: discord.Interaction):
     user_id = interaction.user.id
     user_points[user_id] = user_points.get(user_id, 0)
     points = user_points[user_id]
-    await interaction.response.send_message(f"Great Job {ctx.author.mention}! You have {points} points!")
-    print(f"{ctx.author.mention} has {points} points.")
+    await interaction.response.send_message(f"Great Job {interaction.user.mention}! You have {points} points!")
+    print(f"{interaction.user.mention} has {points} points.")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
