@@ -236,10 +236,10 @@ async def slash_ping_points(interaction: discord.Interaction, member: discord.Me
 
 # Edit Command - Only through ! not a slash command...
 @bot.command()
-async def edit(ctx, *, new_name: str = None):
+async def edit(ctx, new_name: str = None):
     admin_role = discord.utils.get(ctx.guild.roles, name="admin")
     if admin_role in ctx.author.roles:
-        if ctx.message.attachments: 
+        if ctx.message.attachments:
             new_pfp = await ctx.message.attachments[0].read()
             try:
                 await bot.user.edit(avatar=new_pfp)
@@ -247,7 +247,8 @@ async def edit(ctx, *, new_name: str = None):
                 print("Bot profile picture updated")
             except discord.Forbidden:
                 await ctx.send("ERROR: I-CANNOT-CHANGE-MY-PICTURE-NEED-MORE-PERMISSIONS-BEEPBOOP 🔧🕹️🤖")
-        elif new_name:
+        
+        if new_name:
             try:
                 await ctx.guild.me.edit(nick=new_name)
                 await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
@@ -255,8 +256,9 @@ async def edit(ctx, *, new_name: str = None):
             except discord.Forbidden:
                 await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
         else:
-            await ctx.send("ERROR: PLEASE-PROVIDE-A-NEW-NAME-OR-ATTACHMENT-FOR-EDITING-BEEPBOOP 📎🛠️🤖")
+            await ctx.send("ERROR: NO-NEW-NAME-PROVIDED-BEEPBOOP 📎🛠️🤖")
     else:
         await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-EDIT-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
+
 
 bot.run(os.getenv("DISCORD_TOKEN"))
