@@ -234,36 +234,29 @@ async def slash_ping_points(interaction: discord.Interaction, member: discord.Me
     await interaction.response.send_message(f"Great Job {member.mention}! You have {points} points in Ping Pong!")
     print(f"{member.mention} has {points} points.")
 
-# Rename and Change_PFP Command - Only through ! not a slash command...
+# Edit Command - Only through ! not a slash command...
 @bot.command()
-async def rename(ctx, *, new_name: str):
-    admin_role = discord.utils.get(ctx.guild.roles, name="admin")
-    if admin_role in ctx.author.roles:
-        try:
-            await ctx.guild.me.edit(nick=new_name)
-            await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
-            print(f"Bot renamed to {new_name}")
-        except discord.Forbidden:
-            await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
-    else:
-        await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-RENAME-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
-
-@bot.command()
-async def change_pfp(ctx):
+async def edit(ctx, *, new_name: str = None):
     admin_role = discord.utils.get(ctx.guild.roles, name="admin")
     if admin_role in ctx.author.roles:
         if ctx.message.attachments: 
-            new_pfp = await ctx.message.attachments[0].read() 
+            new_pfp = await ctx.message.attachments[0].read()
             try:
                 await bot.user.edit(avatar=new_pfp)
                 await ctx.send("SUCCESS: PROFILE-PICTURE-UPDATED-BEEPBOOP 📸🤖")
                 print("Bot profile picture updated")
             except discord.Forbidden:
                 await ctx.send("ERROR: I-CANNOT-CHANGE-MY-PICTURE-NEED-MORE-PERMISSIONS-BEEPBOOP 🔧🕹️🤖")
+        elif new_name:
+            try:
+                await ctx.guild.me.edit(nick=new_name)
+                await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
+                print(f"Bot renamed to {new_name}")
+            except discord.Forbidden:
+                await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
         else:
-            await ctx.send("ERROR: PLEASE-ATTACH-AN-IMAGE-FOR-PROFILE-UPDATE-BEEPBOOP 📎🛠️🤖")
+            await ctx.send("ERROR: PLEASE-PROVIDE-A-NEW-NAME-OR-ATTACHMENT-FOR-EDITING-BEEPBOOP 📎🛠️🤖")
     else:
-        await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-CHANGE-MY-PFP-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
-
+        await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-EDIT-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
