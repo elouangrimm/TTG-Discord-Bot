@@ -12,13 +12,28 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # BOT VARIABLES:
+username = "Tidy Tab Groups"
+pfp_path = "pfp.png"
 rich_presence = "Tab Organization"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
 tips_file = "tips.txt"
 tip_time = 9
 user_points = {}
 
-# DAILY TIPS:
+# ☲☲☲☲ BOT SETUP ☲☲☲☲
+
+def load_pfp():
+    with open(pfp_path, 'rb') as f:
+        return f.read()
+
+pfp = load_pfp()
+
+@bot.event
+async def on_ready():
+    await bot.change_presence(activity=discord.Game(name=rich_presence))
+    await bot.tree.sync()
+    send_daily_tip.start()
+    print(f"☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲ Bot logged in as {bot.user}! Success! ☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲")
 
 def load_tips():
     with open(tips_file, "r") as file:
@@ -35,15 +50,6 @@ async def send_daily_tip():
         tip = random.choice(tips)
         await channel.send(f"**Daily Browser Tip:** \n {tip}")
         print("Daily Tip Sent")
-
-# ☲☲☲☲ BOT SETUP ☲☲☲☲
-
-@bot.event
-async def on_ready():
-    await bot.change_presence(activity=discord.Game(name=rich_presence))
-    await bot.tree.sync()
-    send_daily_tip.start()
-    print(f"☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲ Bot logged in as {bot.user}! Success! ☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲")
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
 
@@ -234,29 +240,38 @@ async def slash_ping_points(interaction: discord.Interaction, member: discord.Me
     await interaction.response.send_message(f"Great Job {member.mention}! You have {points} points in Ping Pong!")
     print(f"{member.mention} has {points} points.")
 
-# Edit Command - Only through ! not a slash command...
+# Edit Command - Only through "!", not a slash command...
 @bot.command()
 async def edit(ctx, new_name: str = None):
     admin_role = discord.utils.get(ctx.guild.roles, name="admin")
     if admin_role in ctx.author.roles:
-        if ctx.message.attachments:
-            new_pfp = await ctx.message.attachments[0].read()
+        if new_name == "reset":
             try:
-                await bot.user.edit(avatar=new_pfp)
-                await ctx.send("SUCCESS: PROFILE-PICTURE-UPDATED-BEEPBOOP 📸🤖")
-                print("Bot profile picture updated")
+                await ctx.guild.me.edit(nick=username)
+                await bot.user.edit(avatar=pfp)
+                await ctx.send(f"BEEPBOOP-RESETTING-TO-ORIGINAL-SETTINGS! MY-NAME-IS-NOW **{username}**! 📸🤖")
+                print(f"Bot reset to original name and PFP: {username}")
             except discord.Forbidden:
-                await ctx.send("ERROR: I-CANNOT-CHANGE-MY-PICTURE-NEED-MORE-PERMISSIONS-BEEPBOOP 🔧🕹️🤖")
-        
-        if new_name:
-            try:
-                await ctx.guild.me.edit(nick=new_name)
-                await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
-                print(f"Bot renamed to {new_name}")
-            except discord.Forbidden:
-                await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
+                await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-RESET-MY-NAME-AND-PICTURE 🔧")
         else:
-            await ctx.send("ERROR: NO-NEW-NAME-PROVIDED-BEEPBOOP 📎🛠️🤖")
+            if ctx.message.attachments:
+                new_pfp = await ctx.message.attachments[0].read()
+                try:
+                    await bot.user.edit(avatar=new_pfp)
+                    await ctx.send("SUCCESS: PROFILE-PICTURE-UPDATED-BEEPBOOP 📸🤖")
+                    print("Bot profile picture updated")
+                except discord.Forbidden:
+                    await ctx.send("ERROR: I-CANNOT-CHANGE-MY-PICTURE-NEED-MORE-PERMISSIONS-BEEPBOOP 🔧🕹️🤖")
+
+            if new_name:
+                try:
+                    await ctx.guild.me.edit(nick=new_name)
+                    await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
+                    print(f"Bot renamed to {new_name}")
+                except discord.Forbidden:
+                    await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
+            else:
+                await ctx.send("ERROR: NO-NEW-NAME-PROVIDED-BEEPBOOP 📎🛠️🤖")
     else:
         await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-EDIT-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
 
