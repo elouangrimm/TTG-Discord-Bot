@@ -205,7 +205,7 @@ async def ping(ctx):
     user_points[user_id] = user_points.get(user_id, 0) + 1
     points = user_points[user_id]
     await ctx.send(f"Pong! 🏓 *(Latency: {latency} ms)*")
-    print("Ping Received, LATENCY: {latency} ms")
+    print(f"Ping Received, LATENCY: {latency} ms")
 
 @bot.tree.command(name="ping", description="Check the bot's latency and play a little game!")
 async def slash_ping(interaction: discord.Interaction):
@@ -214,7 +214,7 @@ async def slash_ping(interaction: discord.Interaction):
     user_points[user_id] = user_points.get(user_id, 0) + 1
     points = user_points[user_id]
     await interaction.response.send_message(f"Pong! 🏓 *(Latency: {latency} ms)*")
-    print("Ping Received, LATENCY: {latency} ms")
+    print(f"Ping Received, LATENCY: {latency} ms")
 
 @bot.command()
 async def ping_points(ctx):
