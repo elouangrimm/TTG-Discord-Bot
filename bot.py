@@ -31,8 +31,7 @@ pfp = load_pfp()
 
 @bot.event
 async def on_ready():
-    activity = discord.Activity(
-        type=discord.ActivityType.watching,
+    activity = discord.Streaming(
         name=rich_presence,
         url=extension_url
     )
