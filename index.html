@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tidy Tab Groups Discord Update Sender</title>
+</head>
+<body>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Enter your message" required>
+        <button type="submit">Send Message</button>
+    </form>
+
+    <script>
+        document.getElementById('messageForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = document.getElementById('messageInput').value;
+
+            const webhookURL = 'https://discord.com/api/webhooks/1300172078254653533/tzm_KtpdYtLZLn-86GfGgWzhybBTF1pQKUPxqKo5qf6eUSD996g-v0GN1I8H54l43QWa';
+
+            const response = await fetch(webhookURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: message }),
+            });
+
+            if (response.ok) {
+                alert('Update sent!');
+                document.getElementById('messageInput').value = '';
+            } else {
+                alert('Failed to send update. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
