@@ -132,14 +132,14 @@ async def slash_addping(interaction: discord.Interaction, role: discord.Role, me
 async def tip(ctx):
     tips = load_tips()
     tip = random.choice(tips)
-    await ctx.send(f"**Browser Tip:** {tip}")
+    await ctx.send(f"**Browser Tip:** \n{tip}")
     print("Tip Sent")
 
 @bot.tree.command(name="tip", description="Get a random browser tip!") 
 async def slash_tip(interaction: discord.Interaction):
     tips = load_tips()
     tip = random.choice(tips)
-    await interaction.response.send_message(f"**Browser Tip:** {tip}")
+    await interaction.response.send_message(f"**Browser Tip:** \n{tip}")
     print("Tip Sent")
 
 @bot.command()
