@@ -234,5 +234,31 @@ async def slash_ping_points(interaction: discord.Interaction, member: discord.Me
     await interaction.response.send_message(f"Great Job {member.mention}! You have {points} points in Ping Pong!")
     print(f"{member.mention} has {points} points.")
 
+# Rename Command
+@bot.command()
+async def rename(ctx, *, new_name: str):
+    admin_role = discord.utils.get(ctx.guild.roles, name="admin")
+    if admin_role in ctx.author.roles:
+        try:
+            await ctx.guild.me.edit(nick=new_name)
+            await ctx.send(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
+            print(f"Bot renamed to {new_name}")
+        except discord.Forbidden:
+            await ctx.send("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
+    else:
+        await ctx.send("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-RENAME-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
+
+@bot.tree.command(name="rename", description="Rename me!")
+async def slash_rename(interaction: discord.Interaction, new_name: str):
+    admin_role = discord.utils.get(interaction.guild.roles, name="admin")
+    if admin_role in interaction.user.roles:
+        try:
+            await interaction.guild.me.edit(nick=new_name)
+            await interaction.response.send_message(f"BEEPBOOP-MY-NAME-IS-NOW **{new_name}**! 🦾")
+            print(f"Bot renamed to {new_name}")
+        except discord.Forbidden:
+            await interaction.response.send_message("ERROR: BEEPBOOP-I-NEED-PERMISSION-TO-CHANGE-MY-NAME 🔧")
+    else:
+        await interaction.response.send_message("ERROR: YOU-DONT-HAVE-PERMISSIONS-TO-RENAME-ME-BEEPBOOP-ONLY-ADMINS-ALLOWED 🕹️🛠️🦾🤖")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
