@@ -217,19 +217,22 @@ async def slash_ping(interaction: discord.Interaction):
     print(f"Ping Received, LATENCY: {latency} ms")
 
 @bot.command()
-async def ping_points(ctx):
-    user_id = ctx.author.id
+async def ping_points(ctx, member: discord.Member = None):
+    member = member or ctx.author
+    user_id = member.id
     user_points[user_id] = user_points.get(user_id, 0)
     points = user_points[user_id]
-    await ctx.send(f"Great Job {ctx.author.mention}! You have {points} points!")
-    print(f"{ctx.author.mention} has {points} points.")
+    await ctx.send(f"Great Job {member.mention}! You have {points} points in Ping Pong!")
+    print(f"{member.mention} has {points} points.")
 
-@bot.tree.command(name="ping_points", description="Check how many points ya got!")
-async def slash_ping_points(interaction: discord.Interaction):
-    user_id = interaction.user.id
+@bot.tree.command(name="ping_points", description="Check how many points you or someone else has in Ping Pong!")
+async def slash_ping_points(interaction: discord.Interaction, member: discord.Member = None):
+    member = member or interaction.user
+    user_id = member.id
     user_points[user_id] = user_points.get(user_id, 0)
     points = user_points[user_id]
-    await interaction.response.send_message(f"Great Job {interaction.user.mention}! You have {points} points!")
-    print(f"{interaction.user.mention} has {points} points.")
+    await interaction.response.send_message(f"Great Job {member.mention}! You have {points} points in Ping Pong!")
+    print(f"{member.mention} has {points} points.")
+
 
 bot.run(os.getenv("DISCORD_TOKEN"))
