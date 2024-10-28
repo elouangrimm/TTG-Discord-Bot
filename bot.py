@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 import os
 import random
 import datetime
+from chatterbot import ChatBot
 
 # Made By Elouan Grimm
 
@@ -13,6 +14,7 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # BOT VARIABLES:
 server_id = 1284250086003708025
+chatbot = ChatBot("Tidy Tab Groups")
 username = "Tidy Tab Groups"
 pfp_path = "pfp.png"
 rich_presence = "Tab Organization"
@@ -71,11 +73,11 @@ async def send_daily_tip():
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
 
-# Response to a Ping
+# Response to a Ping with AI
 @bot.event
 async def on_message(message):
     if bot.user.mentioned_in(message):
-        response = random.choice(ping_responses)
+        response = chatbot.get_response(message)
         await message.reply(response)
 
     await bot.process_commands(message)
