@@ -21,6 +21,13 @@ ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
 tips_file = "tips.txt"
 tip_time = 9
 user_points = {}
+ping_responses = [
+    "Hello there! 👋",
+    "How can I help you today? 😊",
+    "What's up? 😄",
+    "Here to assist you! 🤖",
+    "Need anything? I'm just a ping away! 😎"
+]
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 
@@ -63,6 +70,16 @@ async def send_daily_tip():
         print("Daily Tip Sent")
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
+
+# Response to a Ping
+@bot.event
+async def on_message(message):
+    if bot.user.mentioned_in(message):
+        response = random.choice(responses)
+        await message.reply(response)
+
+    await bot.process_commands(message)
+
 
 # Add Ping Command
 @bot.command()
