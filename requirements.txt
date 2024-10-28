@@ -1,4 +1,3 @@
 
 discord.py
-chatterbot==1.0.5
-sqlalchemy==1.3.23
+chatterbot.py
