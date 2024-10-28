@@ -12,6 +12,7 @@ intents.members = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # BOT VARIABLES:
+server_id = 1284250086003708025
 username = "Tidy Tab Groups"
 pfp_path = "pfp.png"
 rich_presence = "Tab Organization"
@@ -36,9 +37,13 @@ async def on_ready():
         url=extension_url
     )
     await bot.change_presence(activity=activity)
-    await bot.tree.sync()
+    
+    test_guild_id = server_id
+    await bot.tree.sync(guild=discord.Object(id=test_guild_id))
+    
     send_daily_tip.start()
     print(f"☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲ Bot logged in as {bot.user}! Success! ☲☲☲☲☲☲☲☲☲☲☲☲☲☲☲")
+
 
 def load_tips():
     with open(tips_file, "r") as file:
