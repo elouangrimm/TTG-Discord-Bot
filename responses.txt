@@ -1,0 +1,8 @@
+# Format the responses like this, with an emoji at the end. (btw u can use comments with #s):
+Hello there! 👋
+How can I help you today? 😊
+What's up? 😄
+Here to assist you! 🤖
+Need anything? I'm just a ping away! 😎
+Hey! How is not having to organize tabs going? 😄
+How can I help? 👋
