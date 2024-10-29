@@ -89,7 +89,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if bot.user.mentioned_in(message) and message.mentions[0] != bot.user:
+    if bot.user.mentioned_in(message):
         print("Bot Pinged - Atempting Response")
         token = os.getenv("HUGGING_FACE_TOKEN")
         api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
