@@ -95,7 +95,7 @@ async def on_message(message):
         api_url = "https://api-inference.huggingface.co/models/microsoft/GODEL-v1_1-large-seq2seq"
         headers = {"Authorization": f"Bearer {token}"}
 
-        input_text = f"User: {message.content}\nAI:"
+        input_text = f"{message.content}"
         data = {
             "inputs": input_text,
             "parameters": {
@@ -116,8 +116,8 @@ async def on_message(message):
             json_data = response.json()
             print(json_data)
 
-            if isinstance(json_data, dict) and "generated_text" in json_data:
-                reply_text = json_data["generated_text"]
+            if isinstance(json_data, list) and len(json_data) > 0 and "generated_text" in json_data[0]:
+                reply_text = json_data[0]["generated_text"]
                 print("AI: Message Generated, Code 200")
             else:
                 reply_text = "Hmm... couldn't quite generate a response! 😅"
@@ -135,6 +135,7 @@ async def on_message(message):
         await message.reply(reply_text)
 
     await bot.process_commands(message)
+
 
 
 # Add Ping Command
