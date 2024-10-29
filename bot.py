@@ -120,14 +120,16 @@ async def on_message(message):
         elif response.status_code == 500:
             reply_text = "The server seems to be having issues! Try again later. 🛠️"
             print("AI: Server Issues, Code 500")
+        elif response.status_code == 503:
+            reply_text = "The server is busy right now. Please try again later. 😕"
+            print("AI: Server Busy, Code 503")
         else:
-            reply_text = f"Unexpected error: {response.status_code}. 😕"
-            print(f"AI: Unexpected Error, Code {response.status_code}")
+            error_message = response.json() if response.headers.get('Content-Type') == 'application/json' else response.text
+            reply_text = f"Error: {response.status_code} - {error_message} 😕"
+            print(f"AI: Unexpected Error, Code {response.status_code}, Message: {error_message}")
 
     await message.reply(reply_text)
     await bot.process_commands(message)
-
-
 
 # Add Ping Command
 @bot.command()
