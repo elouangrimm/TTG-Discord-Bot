@@ -95,9 +95,7 @@ async def on_message(message):
         api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
         headers = {"Authorization": f"Bearer {token}"}
 
-        custom_instructions = ai_instructions
-        input_text = custom_instructions + message.content
-
+        input_text = f"{ai_instructions}\nUser: {message.content}\nAI:"
         data = {"inputs": input_text}
         response = requests.post(api_url, headers=headers, json=data)
 
