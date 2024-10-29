@@ -3,7 +3,6 @@ from discord.ext import commands, tasks
 import os
 import random
 import datetime
-from chatterbot import ChatBot
 
 # Made By Elouan Grimm
 
@@ -14,13 +13,13 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 
 # BOT VARIABLES:
 server_id = 1284250086003708025
-chatbot = ChatBot("Tidy Tab Groups")
 username = "Tidy Tab Groups"
 pfp_path = "pfp.png"
 rich_presence = "Tab Organization"
 extension_url = "https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf"
 ALLOWED_ROLES = ["updates", "socials", "stuff", "support", "ping", "yapper"]
 tips_file = "tips.txt"
+responses_file = "responses.txt"
 tip_time = 9
 user_points = {}
 ping_responses = [
@@ -60,6 +59,12 @@ def load_tips():
     print("Tip File Loaded")
     return tips
 
+def load_responses():
+    with open(responses_file, "r") as file:
+        responses = [line for line in file.read().splitlines() if not line.startswith("#")]
+    print("Responses File Loaded")
+    return responses
+
 
 @tasks.loop(minutes=1)
 async def send_daily_tip():
@@ -73,11 +78,11 @@ async def send_daily_tip():
 
 # ☲☲☲☲ COMMANDS ☲☲☲☲
 
-# Response to a Ping with AI
+# Response to a Ping
 @bot.event
 async def on_message(message):
     if bot.user.mentioned_in(message):
-        response = chatbot.get_response(message)
+        response = random.choice(responses)
         await message.reply(response)
 
     await bot.process_commands(message)
