@@ -109,8 +109,8 @@ async def on_message(message):
                 reply_text = json_data["generated_text"]
                 print("AI: Message Generated, Code 200")
             else:
-                reply_text = "Hmm... couldn't quite generate a response! 😅"
-                print("AI: Unknown Error")
+                reply_text = "Hmm... couldn't quite generate a response! ||{response.status_code} - {error_message}||😅"
+                print(f"AI: Unexpected Error, Code {response.status_code}, Message: {error_message}")
         elif response.status_code == 401:
             reply_text = "Authentication failed! Check your API token. 🔑🚫"
             print("AI: API Error, Code 401")
