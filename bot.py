@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 import os
 import random
 import datetime
+import requests
 
 # Made By Elouan Grimm
 
@@ -14,6 +15,17 @@ bot = commands.Bot(command_prefix="!", intents=intents)
 # BOT VARIABLES:
 server_id = 1284250086003708025
 username = "Tidy Tab Groups"
+ai_instructions = '''
+
+Your name is Tidy Tab Groups. 
+You are an Autonomous Agent belonging to Tidy Tab Groups, a tab organization Chrome Extension. 
+You can search the web and look for answers in the knowledge base. 
+All responses other than the user asking for instructions should be cheerful and very short, a couple words. 
+ASCII Emojis sould be used very often. You are a Discord Bot in a Discord Server about Tidy Tab Groups. 
+Do not EVER ask "what can I do today" or some other alternative of that. 
+If the user message is a direct question, be in depth and give a lot of information.
+
+'''
 pfp_path = "pfp.png"
 rich_presence = "Tab Organization"
 extension_url = "https://chromewebstore.google.com/detail/tidy-tab-groups/fohgbkobjdckaapjimleemkolchkmebf"
@@ -75,10 +87,22 @@ async def send_daily_tip():
 @bot.event
 async def on_message(message):
     if bot.user.mentioned_in(message):
-        responses = load_responses()
-        response = random.choice(responses)
-        await message.reply(response)
+        token = os.getenv("HUGGING_FACE_TOKEN")
+        api_url = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
+        headers = {"Authorization": f"Bearer {token}"}
 
+        custom_instructions = ai_instructions
+        input_text = custom_instructions + message.content
+
+        data = {"inputs": {"text": input_text}}
+        response = requests.post(api_url, headers=headers, json=data)
+
+        if response.status_code == 200:
+            reply_text = response.json().get("generated_text", "Hmm... not sure what to say! 😅")
+        else:
+            reply_text = "Sorry, I'm having trouble thinking right now! 🧠💤"
+
+        await message.reply(reply_text)
     await bot.process_commands(message)
 
 
