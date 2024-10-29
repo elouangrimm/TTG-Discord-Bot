@@ -89,8 +89,6 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    reply_text = ""
-
     if bot.user.mentioned_in(message) and message.mentions[0] != bot.user:
         token = os.getenv("HUGGING_FACE_TOKEN")
         api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
@@ -128,7 +126,8 @@ async def on_message(message):
             reply_text = f"Error: {response.status_code} - {error_message} 😕"
             print(f"AI: Unexpected Error, Code {response.status_code}, Message: {error_message}")
 
-    await message.reply(reply_text)
+        await message.reply(reply_text)
+
     await bot.process_commands(message)
 
 # Add Ping Command
