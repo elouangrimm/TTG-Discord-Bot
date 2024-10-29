@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tidy Tab Groups Discord Update Sender</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            color: #1e90ff;
+            font-size: 2rem;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            border: 2px solid #1e90ff;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        input {
+            color: #1e90ff;
+            font-size: 2rem;
+            text-decoration: none;
+            padding: 0.5em 1em;
+            border: 2px solid #1e90ff;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        button:hover {
+            background-color: #1e90ff;
+            color: #121212;
+        }
+    </style>
 </head>
 <body>
     <form id="messageForm">
@@ -16,7 +50,7 @@
             e.preventDefault();
             const message = document.getElementById('messageInput').value;
 
-            const webhookURL = 'https://discord.com/api/webhooks/1300172078254653533/tzm_KtpdYtLZLn-86GfGgWzhybBTF1pQKUPxqKo5qf6eUSD996g-v0GN1I8H54l43QWa';
+            const webhookURL = 'https://discord.com/api/webhooks/1300744831651282984/nlBYXjIzlssMmc3KllJlc39mktEYowJDJtXlg92uiOFxniU8AH1xbxc_nu8tdHGYR75s';
 
             const response = await fetch(webhookURL, {
                 method: 'POST',
