@@ -89,9 +89,9 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    reply_text = "Hmm... I'm having some trouble processing that! 😅"
+    reply_text = ""
 
-    if bot.user.mentioned_in(message):
+    if bot.user.mentioned_in(message) and message.mentions[0] != bot.user:
         token = os.getenv("HUGGING_FACE_TOKEN")
         api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
         headers = {"Authorization": f"Bearer {token}"}
@@ -109,8 +109,8 @@ async def on_message(message):
                 reply_text = json_data["generated_text"]
                 print("AI: Message Generated, Code 200")
             else:
-                reply_text = "Hmm... couldn't quite generate a response! ||{response.status_code} - {error_message}||😅"
-                print(f"AI: Unexpected Error, Code {response.status_code}, Message: {error_message}")
+                reply_text = "Hmm... couldn't quite generate a response! 😅"
+                print("AI: Unknown Error")
         elif response.status_code == 401:
             reply_text = "Authentication failed! Check your API token. 🔑🚫"
             print("AI: API Error, Code 401")
