@@ -86,6 +86,8 @@ async def send_daily_tip():
 # Response to a Ping with AI
 @bot.event
 async def on_message(message):
+    reply_text = "Hmm... I'm having some trouble processing that! 😅"
+
     if bot.user.mentioned_in(message):
         token = os.getenv("HUGGING_FACE_TOKEN")
         api_url = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
@@ -98,33 +100,30 @@ async def on_message(message):
         response = requests.post(api_url, headers=headers, json=data)
 
         if response.status_code == 200:
-                json_data = response.json()
-                print(json_data)
-                if "generated_text" in json_data:
-                    reply_text = json_data["generated_text"]
-                    print("AI: Message Generated, Code 200")
-                else:
-                    reply_text = "Hmm... couldn't quite generate a response! 😅"
-                    print("AI: Unknown Error")
-            elif response.status_code == 401:
-                reply_text = "Authentication failed! Check your API token. 🔑🚫"
-                print("AI: API Error, Code 401")
-            elif response.status_code == 429:
-                reply_text = "Whoa, too many requests! Slow down a bit 🐢💨"
-                print("AI: Too Many Requests, Code 429")
-            elif response.status_code == 500:
-                reply_text = "The server seems to be having issues! Try again later. 🛠️"
-                print("AI: Server Issues, Code 500")
+            json_data = response.json()
+            print(json_data)
+            if "generated_text" in json_data:
+                reply_text = json_data["generated_text"]
+                print("AI: Message Generated, Code 200")
             else:
-                reply_text = f"Unexpected error: {response.status_code}. 😕"
-                print(f"AI: Unexpected Error, Code {response.status_code}")
+                reply_text = "Hmm... couldn't quite generate a response! 😅"
+                print("AI: Unknown Error")
+        elif response.status_code == 401:
+            reply_text = "Authentication failed! Check your API token. 🔑🚫"
+            print("AI: API Error, Code 401")
+        elif response.status_code == 429:
+            reply_text = "Whoa, too many requests! Slow down a bit 🐢💨"
+            print("AI: Too Many Requests, Code 429")
+        elif response.status_code == 500:
+            reply_text = "The server seems to be having issues! Try again later. 🛠️"
+            print("AI: Server Issues, Code 500")
+        else:
+            reply_text = f"Unexpected error: {response.status_code}. 😕"
+            print(f"AI: Unexpected Error, Code {response.status_code}")
 
-        except requests.exceptions.RequestException as e:
-            reply_text = f"Network error: {str(e)} 🚨"
-            print("AI: Network Error")
-
-        await message.reply(reply_text)
+    await message.reply(reply_text)
     await bot.process_commands(message)
+
 
 
 # Add Ping Command
