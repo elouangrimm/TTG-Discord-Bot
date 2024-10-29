@@ -92,11 +92,20 @@ async def on_message(message):
     if bot.user.mentioned_in(message):
         print("Bot Pinged - Attempting Response")
         token = os.getenv("HUGGING_FACE_TOKEN")
-        api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
+        api_url = "https://api-inference.huggingface.co/models/microsoft/GODEL-v1_1-large-seq2seq"
         headers = {"Authorization": f"Bearer {token}"}
 
-        input_text = f"{ai_instructions}\nUser: {message.content}\nAI:"
-        data = {"inputs": input_text}
+        input_text = f"User: {message.content}\nAI:"
+        data = {
+            "inputs": input_text,
+            "parameters": {
+                "max_new_tokens": 50,
+                "do_sample": True,
+                "top_k": 50,
+                "top_p": 0.95,
+                "temperature": 0.9,
+            }
+        }
         response = requests.post(api_url, headers=headers, json=data)
 
         def handle_error(response):
@@ -107,8 +116,8 @@ async def on_message(message):
             json_data = response.json()
             print(json_data)
 
-            if isinstance(json_data, list) and len(json_data) > 0 and "generated_text" in json_data[0]:
-                reply_text = json_data[0]["generated_text"]
+            if isinstance(json_data, dict) and "generated_text" in json_data:
+                reply_text = json_data["generated_text"]
                 print("AI: Message Generated, Code 200")
             else:
                 reply_text = "Hmm... couldn't quite generate a response! 😅"
@@ -126,6 +135,7 @@ async def on_message(message):
         await message.reply(reply_text)
 
     await bot.process_commands(message)
+
 
 # Add Ping Command
 @bot.command()
