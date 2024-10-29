@@ -22,13 +22,6 @@ tips_file = "tips.txt"
 responses_file = "responses.txt"
 tip_time = 9
 user_points = {}
-ping_responses = [
-    "Hello there! 👋",
-    "How can I help you today? 😊",
-    "What's up? 😄",
-    "Here to assist you! 🤖",
-    "Need anything? I'm just a ping away! 😎"
-]
 
 # ☲☲☲☲ BOT SETUP ☲☲☲☲
 
@@ -82,6 +75,7 @@ async def send_daily_tip():
 @bot.event
 async def on_message(message):
     if bot.user.mentioned_in(message):
+        responses = load_responses()
         response = random.choice(responses)
         await message.reply(response)
 
