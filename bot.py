@@ -90,7 +90,7 @@ async def on_message(message):
         return
 
     if bot.user.mentioned_in(message):
-        print("Bot Pinged - Atempting Response")
+        print("Bot Pinged - Attempting Response")
         token = os.getenv("HUGGING_FACE_TOKEN")
         api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
         headers = {"Authorization": f"Bearer {token}"}
@@ -101,6 +101,10 @@ async def on_message(message):
         data = {"inputs": input_text}
         response = requests.post(api_url, headers=headers, json=data)
 
+        def handle_error(response):
+            error_message = response.json() if response.headers.get('Content-Type') == 'application/json' else response.text
+            return error_message
+
         if response.status_code == 200:
             json_data = response.json()
             print(json_data)
@@ -110,22 +114,15 @@ async def on_message(message):
             else:
                 reply_text = "Hmm... couldn't quite generate a response! 😅"
                 print("AI: Unknown Error")
-        elif response.status_code == 401:
-            reply_text = "Authentication failed! Check your API token. 🔑🚫"
-            print("AI: API Error, Code 401")
-        elif response.status_code == 429:
-            reply_text = "Whoa, too many requests! Slow down a bit 🐢💨"
-            print("AI: Too Many Requests, Code 429")
-        elif response.status_code == 500:
-            reply_text = "The server seems to be having issues! Try again later. 🛠️"
-            print("AI: Server Issues, Code 500")
-        elif response.status_code == 503:
-            reply_text = "The server is busy right now. Please try again later. 😕"
-            print("AI: Server Busy, Code 503")
         else:
-            error_message = response.json() if response.headers.get('Content-Type') == 'application/json' else response.text
-            reply_text = f"Error: {response.status_code} - {error_message} 😕"
-            print(f"AI: Unexpected Error, Code {response.status_code}, Message: {error_message}")
+            error_messages = {
+                401: "Authentication failed! Check your API token. 🔑🚫",
+                429: "Whoa, too many requests! Slow down a bit 🐢💨",
+                500: "The server seems to be having issues! Try again later. 🛠️",
+                503: "The server is busy right now. Please try again later. 😕"
+            }
+            reply_text = error_messages.get(response.status_code, f"Error: {response.status_code} - {handle_error(response)} 😕")
+            print(f"AI: Error, Code {response.status_code}, Message: {handle_error(response)}")
 
         await message.reply(reply_text)
 
