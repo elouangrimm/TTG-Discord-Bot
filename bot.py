@@ -99,7 +99,7 @@ async def on_message(message):
         custom_instructions = ai_instructions
         input_text = custom_instructions + message.content
 
-        data = {"inputs": {"text": input_text}}
+        data = {"inputs": input_text}
         response = requests.post(api_url, headers=headers, json=data)
 
         if response.status_code == 200:
