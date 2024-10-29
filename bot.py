@@ -86,11 +86,14 @@ async def send_daily_tip():
 # Response to a Ping with AI
 @bot.event
 async def on_message(message):
+    if message.author == bot.user:
+        return
+
     reply_text = "Hmm... I'm having some trouble processing that! 😅"
 
     if bot.user.mentioned_in(message):
         token = os.getenv("HUGGING_FACE_TOKEN")
-        api_url = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
+        api_url = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
         headers = {"Authorization": f"Bearer {token}"}
 
         custom_instructions = ai_instructions
