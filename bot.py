@@ -89,12 +89,13 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if bot.user.mentioned_in(message):
+    if bot.user.mentioned_in(message) and not any(mention in message.content for mention in ["@everyone", "@here"]):
         print("Bot Pinged - Attempting Response")
         token = os.getenv("HUGGING_FACE_TOKEN")
         api_url = "https://api-inference.huggingface.co/models/microsoft/GODEL-v1_1-large-seq2seq"
         headers = {"Authorization": f"Bearer {token}"}
 
+        input_text = re.sub(r'<@!?[0-9]+>', '', message.content).strip()
         input_text = f"{message.content}"
         data = {
             "inputs": input_text,
